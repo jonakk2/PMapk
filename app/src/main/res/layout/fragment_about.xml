@@ -18,6 +18,7 @@
     </TextView>
 
     <TextView
+        android:id="@+id/api"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:gravity="left"
@@ -26,6 +27,7 @@
         android:textSize="30sp" />
 
     <TextView
+        android:id="@+id/icon"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:gravity="left"
