@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HomeFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zvol si činnost: "
+        android:textSize="25dp"
+        android:layout_gravity="center">
+    </TextView>
+
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioRandom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Vše náhodně" />
+
+        <RadioButton
+            android:id="@+id/radioTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vaše anime" />
+
+        <RadioButton
+            android:id="@+id/radioCharacter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vaše postava" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/anime_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="Enter anime name"
+        android:textSize="30dp"
+        android:visibility="invisible"></EditText>
+
+    <Button
+        android:id="@+id/btn_fetch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Fetch"></Button>
+
+    <TextView
+        android:id="@+id/anime_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textSize="28dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/character_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="character"
+        android:textSize="28dp" />
+
+    <TextView
+        android:id="@+id/quote_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="quote"
+        android:textSize="28dp" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="save"
+        android:text="Save"></Button>
+
+
+
+</LinearLayout>
