@@ -1,32 +1,27 @@
-package com.example.nedbal_navigation;
+package com.example.nedbal_navigation
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
 
-import androidx.fragment.app.Fragment;
+class AboutFragment : Fragment() {
+    private var api: TextView? = null
+    private var icon: TextView? = null
 
-import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-
-public class AboutFragment extends Fragment {
-    TextView api;
-    TextView icon;
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_about, container, false);
-
-        api = view.findViewById(R.id.api);
-        api.setMovementMethod(LinkMovementMethod.getInstance());
-
-        icon = view.findViewById(R.id.icon);
-        icon.setMovementMethod(LinkMovementMethod.getInstance());
-
-        return view;
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_about, container, false)
+        api = view.findViewById<TextView>(R.id.api)
+        api?.movementMethod = LinkMovementMethod.getInstance()
+        icon = view.findViewById<TextView>(R.id.icon)
+        icon?.movementMethod = LinkMovementMethod.getInstance()
+        return view
     }
 }
+

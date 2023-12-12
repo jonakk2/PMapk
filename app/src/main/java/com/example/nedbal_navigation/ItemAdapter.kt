@@ -1,52 +1,40 @@
-package com.example.nedbal_navigation;
+package com.example.nedbal_navigation
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.nedbal_navigation.ItemAdapter.ExampleViewHolder
 
-import androidx.recyclerview.widget.RecyclerView;
+class ItemAdapter(private val mHistoryList: ArrayList<HistoryItems>) :
+    RecyclerView.Adapter<ExampleViewHolder>() {
+    class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var mTextViewLine1: TextView
+        var mTextViewLine2: TextView
+        var mTextViewLine3: TextView
 
-import java.util.ArrayList;
-
-
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ExampleViewHolder> {
-    private ArrayList<HistoryItems> mHistoryList;
-
-    public static class ExampleViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextViewLine1;
-        public TextView mTextViewLine2;
-        public TextView mTextViewLine3;
-        public ExampleViewHolder(View itemView) {
-            super(itemView);
-            mTextViewLine1 = itemView.findViewById(R.id.anime_result);
-            mTextViewLine2 = itemView.findViewById(R.id.character_result);
-            mTextViewLine3 = itemView.findViewById(R.id.quote_result);
+        init {
+            mTextViewLine1 = itemView.findViewById(R.id.anime_result)
+            mTextViewLine2 = itemView.findViewById(R.id.character_result)
+            mTextViewLine3 = itemView.findViewById(R.id.quote_result)
         }
     }
 
-    public ItemAdapter(ArrayList<HistoryItems> exampleList) {
-        mHistoryList = exampleList;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
+        val v =
+            LayoutInflater.from(parent.context).inflate(R.layout.fragment_history, parent, false)
+        return ExampleViewHolder(v)
     }
 
-    @Override
-    public ExampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_history, parent, false);
-        ExampleViewHolder evh = new ExampleViewHolder(v);
-        return evh;
+    override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
+        val currentItem = mHistoryList[position]
+        holder.mTextViewLine1.text = currentItem.mAnime
+        holder.mTextViewLine2.text = currentItem.mcharacter
+        holder.mTextViewLine3.text = currentItem.mQuote
     }
 
-    @Override
-    public void onBindViewHolder(ExampleViewHolder holder, int position) {
-        HistoryItems currentItem = mHistoryList.get(position);
-
-        holder.mTextViewLine1.setText(currentItem.getMAnime());
-        holder.mTextViewLine2.setText(currentItem.getMcharacter());
-        holder.mTextViewLine3.setText(currentItem.getMQuote());
-    }
-
-    @Override
-    public int getItemCount() {
-        return mHistoryList.size();
+    override fun getItemCount(): Int {
+        return mHistoryList.size
     }
 }

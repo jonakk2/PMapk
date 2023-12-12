@@ -1,208 +1,181 @@
-package com.example.nedbal_navigation;
+package com.example.nedbal_navigation
 
-import static android.content.Context.MODE_APPEND;
-import static android.content.Context.MODE_PRIVATE;
+import android.content.Context
+import android.os.Bundle
+import android.text.Editable
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
+import androidx.fragment.app.Fragment
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
+class HomeFragment : Fragment() {
+    private var animeName: EditText? = null
+    private var anime_result: TextView? = null
+    private var character_result: TextView? = null
+    private var quote_result: TextView? = null
+    private var btnFetch: Button? = null
+    private var btnSave: Button? = null
+    private var mRandomRadio: RadioButton? = null
+    private var mTitleRadio: RadioButton? = null
+    private var mCharacterRadio: RadioButton? = null
+    private var URL: String? = null
 
-import androidx.fragment.app.Fragment;
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
+        mRandomRadio = view.findViewById(R.id.radioRandom)
+        mTitleRadio = view.findViewById(R.id.radioTitle)
+        mCharacterRadio = view.findViewById(R.id.radioCharacter)
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+        btnFetch = view.findViewById(R.id.btn_fetch)
+        btnSave = view.findViewById(R.id.btn_save)
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        animeName = view.findViewById(R.id.anime_name)
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+        anime_result = view.findViewById(R.id.anime_result)
+        character_result = view.findViewById(R.id.character_result)
+        quote_result = view.findViewById(R.id.quote_result)
 
-
-public class HomeFragment extends Fragment {
-    EditText animeName;
-    TextView anime_result;
-    TextView character_result;
-    TextView quote_result;
-    Button btnFetch, btnSave;
-
-    private static final String FILE_NAME = "historie.txt";
-    private RadioButton mRandomRadio, mTitleRadio, mCharacterRadio;
-
-    private String URL;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home,container,false);
-
-        //checkbox
-        mRandomRadio = view.findViewById(R.id.radioRandom);
-        mTitleRadio = view.findViewById(R.id.radioTitle);
-        mCharacterRadio = view.findViewById(R.id.radioCharacter);
-
-        //btn
-        btnFetch = view.findViewById(R.id.btn_fetch);
-        btnSave = view.findViewById(R.id.btn_save);
-
-        //text input
-        animeName = view.findViewById(R.id.anime_name);
-
-        //text view result
-        anime_result = view.findViewById(R.id.anime_result);
-        character_result = view.findViewById(R.id.character_result);
-        quote_result = view.findViewById(R.id.quote_result);
-
-        mRandomRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mRandomRadio.isChecked()){
-                    animeName.setVisibility(View.INVISIBLE);
-
-                }
-            }
-        });
-
-        mTitleRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mTitleRadio.isChecked()){
-                    animeName.setText("Anime name");
-                    animeName.setVisibility(View.VISIBLE);
-
-                }
-            }
-        });
-
-        mCharacterRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mCharacterRadio.isChecked()){
-                    animeName.setText("Character name");
-                    animeName.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        btnFetch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mRandomRadio.isChecked()){
-                    URL = "https://animechan.vercel.app/api/random";
-                }
-
-                if(mTitleRadio.isChecked()){
-                    URL ="https://animechan.vercel.app/api/random/anime?title=" + animeName.getText().toString().toLowerCase().replaceAll(" ","%20");
-                    Log.e("URL", URL);
-                }
-                if(mCharacterRadio.isChecked()){
-                    URL = "https://animechan.vercel.app/api/random/character?name=" + animeName.getText().toString().toLowerCase().replaceAll(" ", "%20");
-                    Log.e("rest response", URL);
-                }
-
-
-                RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-
-                JsonObjectRequest objectRequest = new JsonObjectRequest(
-                        Request.Method.GET, //http metoda
-                        URL, //url
-                        null, //parametry ktere posilam
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.e("rest response", response.toString());
-
-                                try {
-                                    String anime = response.getString("anime");
-                                    String character = response.getString("character");
-                                    String quote = response.getString("quote");
-
-                                    anime_result.setText(anime);
-                                    character_result.setText(character);
-                                    quote_result.setText(quote);
-
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
-
-
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.e("rest response", error.toString());
-                                Toast.makeText(getActivity(), "Invalid Input " + error,
-                                Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                );
-                requestQueue.add(objectRequest);
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(anime_result.getText().toString().equals("name")  && character_result.getText().toString().equals("character")
-                        && quote_result.getText().toString().equals("quote")){
-                    Toast.makeText(getActivity(), "nelze ulozi default hodnoty!", Toast.LENGTH_SHORT).show();
-                }
-            else {
-
-                    save(view);
-                }
-            }
-        });
-
-        return view;
-    }
-    public void save(View v) {
-        String animeText = anime_result.getText().toString();
-        String characterText = character_result.getText().toString();
-        String quoteText = quote_result.getText().toString();
-        String text ="Anime: " + animeText + "\n" +"Charakter: "+ characterText + "\n"+"Quote: " + quoteText+"\n\n ";
-        FileOutputStream fos = null;
-
-        try {
-            fos = getActivity().openFileOutput(FILE_NAME, MODE_APPEND);
-            fos.write(text.getBytes());
-
-            anime_result.setText("");
-            character_result.setText("");
-            quote_result.setText("");
-
-            Toast.makeText(getActivity(), "Saved to " + getActivity().getFilesDir() + "/" + FILE_NAME,
-                    Toast.LENGTH_LONG).show();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+        mRandomRadio?.setOnClickListener {
+            mRandomRadio?.let { radioButton ->
+                if (radioButton.isChecked) {
+                    animeName?.visibility = View.INVISIBLE
                 }
             }
         }
 
+        mTitleRadio?.setOnClickListener {
+            mTitleRadio?.let { radioButton ->
+                if (radioButton.isChecked) {
+                    animeName?.apply {
+                        setText(Editable.Factory.getInstance().newEditable("Anime name"))
+                        visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+
+        mCharacterRadio?.setOnClickListener {
+            mCharacterRadio?.let { radioButton ->
+                if (radioButton.isChecked) {
+                    animeName?.apply {
+                        setText(Editable.Factory.getInstance().newEditable("Character name"))
+                        visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+
+
+
+        btnFetch?.setOnClickListener {
+            var url: String? = null
+
+            mRandomRadio?.let {
+                if (it.isChecked) {
+                    url = "https://animechan.xyz/api/random"
+                }
+            }
+
+            mTitleRadio?.let {
+                if (it.isChecked) {
+                    val name = animeName?.text.toString().lowercase(Locale.getDefault())
+                        .replace(" ".toRegex(), "%20")
+                    url = "https://animechan.xyz/api/random/anime?title=$name"
+                }
+            }
+
+            mCharacterRadio?.let {
+                if (it.isChecked) {
+                    val name = animeName?.text.toString().lowercase(Locale.getDefault())
+                        .replace(" ".toRegex(), "%20")
+                    url = "https://animechan.xyz/api/random/character?name=$name"
+                }
+            }
+
+            url?.let {
+                Log.e("URL", it)
+
+                val requestQueue = Volley.newRequestQueue(activity)
+                val objectRequest = JsonObjectRequest(
+                    Request.Method.GET,
+                    it, // Použití URL adresy uložené v proměnné 'url'
+                    null,
+                    { response ->
+                        Log.e("rest response", response.toString())
+                        try {
+                            val anime = response.getString("anime")
+                            val character = response.getString("character")
+                            val quote = response.getString("quote")
+                            anime_result?.text = anime
+                            character_result?.text = character
+                            quote_result?.text = quote
+                        } catch (e: JSONException) {
+                            throw RuntimeException(e)
+                        }
+                    }
+                ) { error ->
+                    Log.e("rest response", error.toString())
+                    Toast.makeText(
+                        activity, "Invalid Input $error",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                requestQueue.add(objectRequest)
+            }
+        }
+
+
+        btnSave?.setOnClickListener(View.OnClickListener { view ->
+            if (anime_result?.text.toString() == "name" && character_result?.text.toString() == "character" && quote_result?.text.toString() == "quote") {
+                Toast.makeText(activity, "nelze ulozi default hodnoty!", Toast.LENGTH_SHORT).show()
+            } else {
+                save(view)
+            }
+        })
+
+        return view
+    }
+
+    private fun save(v: View?) {
+        val animeText = anime_result?.text.toString()
+        val characterText = character_result?.text.toString()
+        val quoteText = quote_result?.text.toString()
+        val text = "Anime: $animeText\nCharakter: $characterText\nQuote: $quoteText\n\n "
+        var fos: FileOutputStream? = null
+        try {
+            fos = activity?.openFileOutput(FILE_NAME, Context.MODE_APPEND)
+            fos?.write(text.toByteArray())
+            anime_result?.text = ""
+            character_result?.text = ""
+            quote_result?.text = ""
+            Toast.makeText(
+                activity, "Saved to " + activity?.filesDir + "/" + FILE_NAME,
+                Toast.LENGTH_LONG
+            ).show()
+        } catch (e: IOException) {
+            throw RuntimeException(e)
+        } finally {
+            fos?.close()
+        }
+    }
+
+    companion object {
+        private const val FILE_NAME = "historie.txt"
+    }
 }
 
-}
 

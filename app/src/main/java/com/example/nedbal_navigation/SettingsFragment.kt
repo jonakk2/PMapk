@@ -1,35 +1,35 @@
-package com.example.nedbal_navigation;
+package com.example.nedbal_navigation
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 
-import androidx.fragment.app.Fragment;
+class SettingsFragment : Fragment() {
+    private var btnDelete: Button? = null
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
+        btnDelete = view.findViewById<Button>(R.id.btn_deleteHistory)
+        btnDelete?.setOnClickListener {
+            Toast.makeText(
+                activity, "Deleted" + activity?.filesDir + "/" + FILE_NAME,
+                Toast.LENGTH_LONG
+            ).show()
+            activity?.deleteFile(FILE_NAME)
+        }
+        return view
+    }
 
-
-public class SettingsFragment extends Fragment {
-    private static final String FILE_NAME = "historie.txt";
-
-    Button btnDelete;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        btnDelete = view.findViewById(R.id.btn_deleteHistory);
-
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Deleted" + getActivity().getFilesDir() + "/" + FILE_NAME,
-                        Toast.LENGTH_LONG).show();
-                getActivity().deleteFile(FILE_NAME);
-            }
-        });
-
-        return view;
+    companion object {
+        private const val FILE_NAME = "historie.txt"
     }
 }
+
+
